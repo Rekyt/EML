@@ -4,15 +4,15 @@
 \alias{eml_validate}
 \title{eml online validation tool}
 \usage{
-eml_validate(eml = "", ..., schema_only = FALSE)
+eml_validate(eml, schema_only = TRUE)
 }
 \arguments{
 \item{eml}{path to an eml file or text of eml file}
 
-\item{...}{additional arguments to formQuery}
-
 \item{schema_only}{logical, use schema-only validation tests. 
 will also be used as the fallback mechanism if RHTMLForms is unavailable.}
+
+\item{...}{additional arguments to formQuery}
 }
 \value{
 Two logicals indicating if we pass schema validation tests and id/referencing tests.

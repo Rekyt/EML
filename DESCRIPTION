@@ -19,7 +19,6 @@ VignetteBuilder: knitr
 Additional_repositories: http://www.omegahat.org/R, http://packages.ropensci.org
 Imports:
     XML,
-    RCurl,
     utils,
     uuid,
     yaml,
@@ -28,16 +27,7 @@ Depends:
     R (>= 2.15),
     methods
 Suggests:
-    bibtex,
-    dataone,
-    pander,
     knitr,
-    rfigshare (>= 0.3),
-    rrdf,
-    RefManageR,
-    RHTMLForms,
-    RWordXML,
-    Sxslt,
     testthat
 Collate:
     'reml_environment.R'
@@ -71,23 +61,20 @@ Collate:
     'eml_dataset.R'
     'eml_define_unit.R'
     'eml_define_unitType.R'
-    'eml_figshare.R'
     'eml_get.R'
     'eml_keyword.R'
-    'eml_knb.R'
     'eml_methods.R'
     'eml_person.R'
     'eml_physical.R'
-    'eml_publish.R'
     'eml_read.R'
     'eml_software.R'
     'eml_unit_classes.R'
     'eml_validate.R'
     'eml_wizards.R'
     'eml_write.R'
+    'id_method.R'
     'person_wizard.R'
     'physical_methods.R'
     'print_format.R'
     'software_methods.R'
-    'xsl_coercions.R'
 RoxygenNote: 5.0.1

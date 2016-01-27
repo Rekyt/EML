@@ -374,4 +374,5 @@ tracker](https://github.com/ropensci/EML/issues)
 
 Interested in contributing to the package? Want to know more about how the project is organized? Please see our [contributing](http://github.com/ropensci/EML/blob/master/CONTRIBUTING.md) guidelines. 
 
+
 [![ropensci footer](http://ropensci.org/public_images/github_footer.png)](http://ropensci.org)

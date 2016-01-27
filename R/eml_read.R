@@ -37,9 +37,7 @@ eml_read <- function(file,  ...){
         doc <- content(GET(file), "parsed", "text/xml") 
       
       ## Identifier 
-      } else {   ## FIXME cannot assume this endpoint. Better to use dataone function  
-#        getD1Object(cli, file)
-#        use  dataone::EMLParser -- but returns XMLNode instead of an XMLInternalNode (C pointer...) 
+      } else {   
         doc <- content(GET(paste0("https://cn.dataone.org/cn/v1/object/", file)), "parsed", "text/xml") # content type actually is detected.
       }
   } else {

@@ -8,5 +8,5 @@ inst/xsd
 ^.*\.Rproj$
 ^\.Rproj\.user$
 docker/*
-SUGGESTS
 notebook/*
+README.Rmd
