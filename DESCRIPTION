@@ -55,7 +55,6 @@ Collate:
     'data.set_classes.R'
     'eml.R'
     'emlToS4.R'
-    'eml_access.R'
     'eml_attributeList.R'
     'eml_coverage.R'
     'eml_dataTable.R'

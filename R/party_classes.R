@@ -1,18 +1,18 @@
 
 ###### referencesGroup ####
-setClass("references", 
+setClass("references",
          slots = c(references = "character"),
          contains = "eml.2.1.1") # A special case handles this
 setAs("XMLInternalElementNode", "references", function(from) emlToS4(from))
 setAs("references", "XMLInternalElementNode",   function(from) S4Toeml(from))
 
 
-setClass("ListOfreferences", 
+setClass("ListOfreferences",
          contains = "list")
 
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... referencess to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -20,7 +20,7 @@ setClass("ListOfreferences",
 #' @include eml_base_class.R
 setMethod("c", signature("references"), function(x, ..., recursive = FALSE) new("ListOfreferences", list(x, ...)))
 
-setClass("referencesGroup", 
+setClass("referencesGroup",
          slots = c("references" = "ListOfreferences"),
          contains = "eml.2.1.1")
 
@@ -30,7 +30,7 @@ setAs("referencesGroup", "XMLInternalElementNode",   function(from) S4Toeml(from
 
 ################ responsibleParty ######################
 
-### Definitions for elements of responsibleParty ### 
+### Definitions for elements of responsibleParty ###
 
 setClass("individualName",
          slots = c(salutation = "character",
@@ -52,14 +52,14 @@ setAs("XMLInternalElementNode", "address",   function(from) emlToS4(from))
 setAs("address", "XMLInternalElementNode",   function(from) S4Toeml(from))
 
 # address as character (e.g in bibtex entry)
-setAs("address", 
-      "character", 
+setAs("address",
+      "character",
       function(from) {
-        as.character(paste(from@deliveryPoint, 
-                           from@city, 
-                           from@administrativeArea, 
-                           from@postalCode, 
-                           from@country, 
+        as.character(paste(from@deliveryPoint,
+                           from@city,
+                           from@administrativeArea,
+                           from@postalCode,
+                           from@country,
                            sep = ", ")
                     )
                   }
@@ -67,7 +67,7 @@ setAs("address",
 
 setClass("userID", slots = c(userID = "character",
                              directory = "character"),
-         contains="eml-2.1.1")
+         contains="eml.2.1.1")
 ## Methods for the class
 setAs("XMLInternalElementNode", "userID",   function(from) emlToS4(from))
 setAs("userID", "XMLInternalElementNode",   function(from) S4Toeml(from))
@@ -91,7 +91,7 @@ setAs("responsibleParty", "XMLInternalElementNode",   function(from) S4Toeml(fro
 
 setClass("ListOfresponsibleParty", contains ="list")
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... responsiblePartys to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -99,7 +99,7 @@ setClass("ListOfresponsibleParty", contains ="list")
 setMethod("c", signature("responsibleParty"), function(x, ..., recursive = FALSE) new("ListOfresponsibleParty", list(x, ...)))
 
 
-############ Elements inheriting/of type responsibleParty ### 
+############ Elements inheriting/of type responsibleParty ###
 
 
 ## Defines creator ##
@@ -113,7 +113,7 @@ setClass("ListOfcreator", contains = "list",
                else
                  TRUE)
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... creators to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -130,7 +130,7 @@ setAs("originator", "XMLInternalElementNode",   function(from) S4Toeml(from))
 setClass("ListOforiginator", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... originators to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -144,12 +144,12 @@ setClass("person",
 
 setClass("publisher", contains="responsibleParty")
 
-setAs("XMLInternalElementNode", 
-      "publisher",   
+setAs("XMLInternalElementNode",
+      "publisher",
       function(from) emlToS4(from))
 
-setAs("publisher", 
-      "XMLInternalElementNode",   
+setAs("publisher",
+      "XMLInternalElementNode",
       function(from) S4Toeml(from))
 
 setAs("publisher", "person", function(from){
@@ -165,24 +165,24 @@ setAs("person", "publisher", function(from){
 # institution + coercions
 setClass("institution", contains="responsibleParty")
 
-setAs("XMLInternalElementNode", 
-      "institution",   
+setAs("XMLInternalElementNode",
+      "institution",
       function(from) emlToS4(from))
 
-setAs("institution", 
-      "XMLInternalElementNode",   
+setAs("institution",
+      "XMLInternalElementNode",
       function(from) S4Toeml(from))
 
 setClass("ListOfinstitution", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... institutions to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
 #' @rdname class-institution
-setMethod("c", 
-          signature("institution"), 
+setMethod("c",
+          signature("institution"),
           function(x, ..., recursive = FALSE) new("ListOfinstitution", list(x, ...)))
 
 setAs("institution", "person", function(from){
@@ -206,24 +206,24 @@ setAs("person", "ListOfinstitution", function(from){
 # performer + list + coercions
 setClass("performer", contains="responsibleParty")
 
-setAs("XMLInternalElementNode", 
-      "performer", 
+setAs("XMLInternalElementNode",
+      "performer",
       function(from) emlToS4(from))
 
-setAs("performer", 
-      "XMLInternalElementNode",   
+setAs("performer",
+      "XMLInternalElementNode",
       function(from) S4Toeml(from))
 
 setClass("ListOfperformer", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... performers to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
 #' @rdname class-performer
-setMethod("c", 
-          signature("performer"), 
+setMethod("c",
+          signature("performer"),
           function(x, ..., recursive = FALSE) new("ListOfperformer", list(x, ...)))
 
 setAs("performer", "person", function(from){
@@ -248,24 +248,24 @@ setAs("person", "ListOfperformer", function(from){
 # recipient + list + coercions
 setClass("recipient", contains="responsibleParty")
 
-setAs("XMLInternalElementNode", 
-      "recipient", 
+setAs("XMLInternalElementNode",
+      "recipient",
       function(from) emlToS4(from))
 
-setAs("recipient", 
-      "XMLInternalElementNode",   
+setAs("recipient",
+      "XMLInternalElementNode",
       function(from) S4Toeml(from))
 
 setClass("ListOfrecipient", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... recipients to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
 #' @rdname class-recipient
-setMethod("c", 
-          signature("recipient"), 
+setMethod("c",
+          signature("recipient"),
           function(x, ..., recursive = FALSE) new("ListOfrecipient", list(x, ...)))
 
 setAs("recipient", "person", function(from){
@@ -290,16 +290,16 @@ setAs("person", "ListOfrecipient", function(from){
 # editor + list + coercions
 setClass("editor", contains="responsibleParty")
 
-setAs("XMLInternalElementNode", 
-      "editor",   
+setAs("XMLInternalElementNode",
+      "editor",
       function(from) emlToS4(from))
 
-setAs("editor", 
-      "XMLInternalElementNode",   
+setAs("editor",
+      "XMLInternalElementNode",
       function(from) S4Toeml(from))
 
-setAs("editor", 
-      "person", 
+setAs("editor",
+      "person",
       function(from){
         p <- as(as(from, "responsibleParty"), "person")
         p$role = "cre"
@@ -307,27 +307,27 @@ setAs("editor",
       }
     )
 
-setAs("person", 
-      "editor", 
+setAs("person",
+      "editor",
       function(from) as(as(from, "responsibleParty"), "editor"))
 
-setAs("character", 
-      "editor", 
+setAs("character",
+      "editor",
       function(from) as(as.person(from), "editor"))
 
 setClass("ListOfeditor", contains="list")
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... editors to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
 #' @rdname class-editor
-setMethod("c", 
-          signature("editor"), 
+setMethod("c",
+          signature("editor"),
           function(x, ..., recursive = FALSE) new("ListOfeditor", list(x, ...)))
 
-setAs("ListOfeditor", 
-      "person", 
+setAs("ListOfeditor",
+      "person",
       function(from){
         l <- lapply(from, as, "person")
         out <- NULL
@@ -338,8 +338,8 @@ setAs("ListOfeditor",
       }
     )
 
-setAs("person", 
-      "ListOfeditor", 
+setAs("person",
+      "ListOfeditor",
       function(from){
         new("ListOfeditor", lapply(person, as, "editor"))
       }
@@ -361,7 +361,7 @@ setAs("associatedParty", "XMLInternalElementNode",   function(from) S4Toeml(from
 setClass("ListOfmetadataProvider", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... metadataProviders to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -370,7 +370,7 @@ setMethod("c", signature("metadataProvider"), function(x, ..., recursive = FALSE
 setClass("ListOfassociatedParty", contains="list")
 
 #' concatenate
-#' 
+#'
 #' concatenate
 #' @param x,... associatedPartys to concatenate
 #' @param recursive Needed for compatibility with generic, otherwise ignored
@@ -383,7 +383,7 @@ setMethod("c", signature("associatedParty"), function(x, ..., recursive = FALSE)
 
 
 
-########### Coercions between classes ########### 
+########### Coercions between classes ###########
 
 
 setAs("creator", "contact", function(from)
@@ -392,8 +392,8 @@ setAs("creator", "contact", function(from)
 
 ### Coercsions to person object ###########
 
-# Make a formal S4 class of the S3 class.  
-#' @import utils 
+# Make a formal S4 class of the S3 class.
+#' @import utils
 setOldClass("person") # promote to S4
 
 setAs("character", "responsibleParty", function(from){
