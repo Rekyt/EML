@@ -65,12 +65,12 @@ setAs("address",
                   }
         )
 
-setClass("userID", slots = c(userID = "character",
+setClass("userId", slots = c(userId = "character",
                              directory = "character"),
          contains="eml.2.1.1")
 ## Methods for the class
-setAs("XMLInternalElementNode", "userID",   function(from) emlToS4(from))
-setAs("userID", "XMLInternalElementNode",   function(from) S4Toeml(from))
+setAs("XMLInternalElementNode", "userId",   function(from) emlToS4(from))
+setAs("userId", "XMLInternalElementNode",   function(from) S4Toeml(from))
 
 ### definition of the focal class, responsibleParty
 setClass("responsibleParty",
@@ -81,7 +81,7 @@ setClass("responsibleParty",
                         phone = "character",
                         electronicMailAddress = "character",
                         onlineUrl = "character",
-                        userID = "userID"),
+                        userId = "userId"),
          contains = "referencesGroup")
 ## Methods for the class
 setAs("XMLInternalElementNode", "responsibleParty",   function(from) emlToS4(from))

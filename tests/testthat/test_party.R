@@ -86,3 +86,13 @@ test_that("Coercions work with EML:::contact_creator function", {
 
 
 })
+
+test_that("eml-party userId attribute serializes properly", {
+    b <- EML:::contact_creator(contact = "Matthew Jones <jones@nceas.ucsb.edu>")
+    b$creator[[1]]@userId <- new("userId")
+    b$creator[[1]]@userId@userId <- "http://orcid.org/0000-0003-0077-4738"
+    b$creator[[1]]@userId@directory <- "http://orcid.org"
+
+    expect_is(b$creator, "ListOfcreator")
+
+})

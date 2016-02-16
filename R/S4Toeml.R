@@ -5,7 +5,7 @@
 
 
 
-## Used as the basis of most (all) coercion methods from EML S4 
+## Used as the basis of most (all) coercion methods from EML S4
 ## to XML::XMLInternalElementNode class
 ##
 ## - Will convert only the id to an attribute, everything else is a child node
@@ -13,9 +13,9 @@
 ## `setAs("someS4class", "XMLInternalElementNode", function(from) S4Toeml(from))`
 ## will fail!
 
-attribute_elements <- c("id", "system", "scope", "packageId")
+attribute_elements <- c("id", "system", "scope", "packageId", "directory")
 
-S4Toeml <- function(obj, 
+S4Toeml <- function(obj,
                     node = NULL,
                     excluded_slots = c("namespaces", "dirname", "xmlNodeName")){
 
@@ -46,14 +46,14 @@ S4Toeml <- function(obj,
             addChildren(node, lapply(slot(obj, s), as, "XMLInternalElementNode"))
           } else if(isS4(slot(obj, s))){
             addChildren(node, as(slot(obj, s), "XMLInternalElementNode"))
-          ## Simple Child nodes  
+          ## Simple Child nodes
           } else if(length(slot(obj, s)) > 0){
              if(s == class(obj)[1])              # special case
               addChildren(node, slot(obj, s))   #
-             else  
+             else
               addChildren(node, newXMLNode(s,slot(obj, s)))
           ## No child node
-          } 
+          }
         } else {
           node
         }
@@ -67,19 +67,19 @@ isEmpty <- function(obj){
   if(!isS4(obj)){
     if(length(obj) > 0)
       out <- FALSE
-    else 
+    else
       out <- TRUE
   } else {
     if( identical(obj, new(class(obj)[1])) )
       out <- TRUE
     else if(is(obj, "list"))
-      out <- all(sapply(obj, isEmpty))  # a ListOf object of length > 0 is still empty if all elements are empty 
+      out <- all(sapply(obj, isEmpty))  # a ListOf object of length > 0 is still empty if all elements are empty
     else {
-      empty <- sapply(slotNames(obj), 
+      empty <- sapply(slotNames(obj),
       function(s){
         if(isS4(slot(obj, s)))
           isEmpty(slot(obj,s))
-        else { 
+        else {
           if(length(slot(obj, s)) == 0)
             TRUE
           else if(length(slot(obj, s)) > 0)
@@ -88,7 +88,7 @@ isEmpty <- function(obj){
       })
       out <- !any(!empty)
     }
-    out 
+    out
   }
 }
 
