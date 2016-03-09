@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="pandoc">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Carl Boettiger">
+
+<meta name="date" content="2016-03-09">
+
+<title>Creating EML</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css">
+
+<script src="Creating%20EML_files/MathJax.js" type="text/javascript"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body><div style="display: none;" id="MathJax_Message"></div>
+
+
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">Creating EML</h1>
+<h4 class="author"><em>Carl Boettiger</em></h4>
+<h4 class="date"><em>2016-03-09</em></h4>
+
+</div>
+
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"EML"</span>)</code></pre></div>
+<p>In this vignette we construct an example EML file based on an example from the Harvard Forest LTER site, <code>knb-lter-hf205-01.xml</code>. This illustrates how many of the commonly utilized EML fields are constructed using the R package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"EML"</span>)</code></pre></div>
+<p>Here we construct a common EML file, including:</p>
+<ul>
+<li>Constructing more complete lists of authors, publishers and contact.</li>
+<li>Summarizing the geographic, temporal, and taxonomic coverage of the dataset</li>
+<li>Reading in pages of methods descriptions from a Word document</li>
+<li>Adding arbitrary additional metadata</li>
+<li>Indicating the canonical citation to the paper that should be acknowledged when the data is re-used.<br>
+</li>
+<li>Conversion between EML and other metadata formats, such as NCBII and ISO standards.</li>
+</ul>
+<p>In so doing we will take a modular approach that will allow us to 
+build up our metadata from reusable components, while also providing a 
+more fine-grained control over the resulting output fields and files.</p>
+<div id="overview-of-the-eml-hierarchy" class="section level3">
+<h3>Overview of the EML hierarchy</h3>
+<p>A basic knowledge of the components of an EML metadata file is 
+essential to being able to take full advantage of the language. While 
+more complete information can be found in the official schema 
+documentation, here we provide a general overview of commonly used 
+metadata elements most relevant to describing data tables.</p>
+<p>This schematic shows each of the metadata elements we will generate. 
+Most these elements have sub-components (e.g.&nbsp;a ‘publisher’ may 
+have a name, address, and so forth) which are not shown for simplicity. 
+Other optional fields we will not be generating in this example are also
+ not shown.</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="kw">-</span> eml
+  <span class="kw">-</span> dataset
+    <span class="kw">-</span> creator
+    <span class="kw">-</span> title
+    <span class="kw">-</span> publisher
+    <span class="kw">-</span> pubDate
+    <span class="kw">-</span> keywords
+    <span class="kw">-</span> abstract 
+    <span class="kw">-</span> intellectualRights
+    <span class="kw">-</span> contact
+    <span class="kw">-</span> methods
+    <span class="kw">-</span> coverage
+      <span class="kw">-</span> geographicCoverage
+      <span class="kw">-</span> temporalCoverage
+      <span class="kw">-</span> taxonomicCoverage
+    <span class="kw">-</span> dataTable
+      <span class="kw">-</span> entityName
+      <span class="kw">-</span> entityDescription
+      <span class="kw">-</span> physical
+      <span class="kw">-</span> attributeList</code></pre></div>
+</div>
+<div id="our-example-re-creating-hf205.xml" class="section level3">
+<h3>Our example: (re)-creating hf205.xml</h3>
+<p>In this example, we will use R to re-generate the EML metadata originally published by <a href="http://harvardforest.fas.harvard.edu:8080/exist/apps/datasets/showData.html?id=hf205">Ellison <em>et al</em> (2012)</a> through the Harvard Forest Long Term Ecological Research Center, accompanying the PNAS paper <a href="http://dx.doi.org/10.1073/pnas.122103711">Sirota <em>et al</em> (2013)</a>.
+ We have made only a few modifications to simplify the presentation of 
+this tutorial, so our resulting EML will not be perfectly identical to 
+the original.</p>
+</div>
+<div id="our-strategy" class="section level3">
+<h3>Our strategy</h3>
+<p>We will build this EML file from the bottom up, starting with the two main components of a <code>dataTable</code> indicated above: the <code>attributeList</code> and the <code>physical</code> file type. We will then slip these two pieces into place inside a <code>dataTable</code> element, and slip that into our <code>eml</code> element along with the rest of the generic metadata, much like building a puzzle or nesting a set of Russian dolls.</p>
+<p>The original metadata file was created in association with the 
+publication in PNAS based on a Microsoft Word document template that 
+Harvard Forest provides to the academic researchers. Metadata from this 
+template is then read off by hand and an EML file is generated using a 
+combination of a commercial XML editing platform (Oxygen) for commonly 
+used higher-level elements, and the Java platform <code>Morpho</code> provided by the EML development team for lower level attribute metadata.</p>
+</div>
+<div id="attribute-metadata" class="section level2">
+<h2>Attribute Metadata</h2>
+<p>A fundamental part of EML metadata is a description of the attributes
+ (usually columns) of a text file (usually a csv file) containing the 
+data being described. This is the heart of many EML files.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">attributes &lt;-
+<span class="kw">data.frame</span>(
+  <span class="dt">attributeName =</span> <span class="kw">c</span>(
+  <span class="st">"run.num"</span>,
+  <span class="st">"year"</span>,
+  <span class="st">"day"</span>,
+  <span class="st">"hour.min"</span>,
+  <span class="st">"i.flag"</span>,
+  <span class="st">"variable"</span>,
+  <span class="st">"value.i"</span>), 
+  <span class="dt">formatString =</span> <span class="kw">c</span>(
+    <span class="ot">NA</span>,        
+    <span class="st">"YYYY"</span>,     
+    <span class="st">"DDD"</span>,      
+    <span class="st">"hhmm"</span>,     
+    <span class="ot">NA</span>,         
+    <span class="ot">NA</span>,         
+    <span class="ot">NA</span>),
+   <span class="dt">definition =</span> <span class="kw">c</span>(        
+    <span class="st">"which run number"</span>,
+    <span class="ot">NA</span>,
+    <span class="ot">NA</span>,
+    <span class="ot">NA</span>,
+    <span class="ot">NA</span>,
+    <span class="ot">NA</span>, 
+    <span class="ot">NA</span>),
+  <span class="dt">attributeDefinition =</span> <span class="kw">c</span>(
+    <span class="st">"which run number (=block). Range: 1 - 6. (integer)"</span>,
+    <span class="st">"year, 2012"</span>,
+    <span class="st">"Julian day. Range: 170 - 209."</span>,
+    <span class="st">"hour and minute of observation. Range 1 - 2400 (integer)"</span>,
+    <span class="st">"is variable Real, Interpolated or Bad (character/factor)"</span>,
+    <span class="st">"what variable being measured in what treatment (character/factor)."</span>,
+    <span class="st">"value of measured variable for run.num on year/day/hour.min."</span>),
+  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>
+)</code></pre></div>
+<p>Factors (enumerated domains) need to specify definitions for each of 
+the code terms appearing in the data columns. This does not fit so 
+nicely in the above table, where each attribute is a single row, so if 
+data uses factors (instead of non-enumerated strings), these definitions
+ must be provided in a separate table. The format expected of this table
+ has three columns: <code>attributeName</code> (as before), <code>code</code>, and <code>definition</code>. Note that <code>attributeName</code> is simply repeated for all codes belonging to a common attribute.</p>
+<p>In this case we have three attributes that are factors, To make the 
+code below more readable (aligning code and definitions side by side), 
+we define these first as named character vectors, and convert that to a <code>data.frame</code>. (The <code>dplyr::frame_data</code> function also permits this more readable way to define data.frames inline).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i.flag &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">R =</span> <span class="st">"real"</span>,
+            <span class="dt">I =</span> <span class="st">"interpolated"</span>,
+            <span class="dt">B =</span> <span class="st">"bad"</span>)
+variable &lt;-<span class="st"> </span><span class="kw">c</span>(
+  <span class="dt">control  =</span> <span class="st">"no prey added"</span>,
+  <span class="dt">low      =</span> <span class="st">"0.125 mg prey added ml-1 d-1"</span>,
+  <span class="dt">med.low  =</span> <span class="st">"0,25 mg prey added ml-1 d-1"</span>,
+  <span class="dt">med.high =</span> <span class="st">"0.5 mg prey added ml-1 d-1"</span>,
+  <span class="dt">high     =</span> <span class="st">"1.0 mg prey added ml-1 d-1"</span>,
+  <span class="dt">air.temp =</span> <span class="st">"air temperature measured just above all plants (1 thermocouple)"</span>,
+  <span class="dt">water.temp =</span> <span class="st">"water temperature measured within each pitcher"</span>,
+  <span class="dt">par       =</span> <span class="st">"photosynthetic active radiation (PAR) measured just above all plants (1 sensor)"</span>
+)
+
+value.i &lt;-<span class="st"> </span><span class="kw">c</span>(
+  <span class="dt">control  =</span> <span class="st">"% dissolved oxygen"</span>,
+  <span class="dt">low      =</span> <span class="st">"% dissolved oxygen"</span>,
+  <span class="dt">med.low  =</span> <span class="st">"% dissolved oxygen"</span>,
+  <span class="dt">med.high =</span> <span class="st">"% dissolved oxygen"</span>,
+  <span class="dt">high     =</span> <span class="st">"% dissolved oxygen"</span>,
+  <span class="dt">air.temp =</span> <span class="st">"degrees C"</span>,
+  <span class="dt">water.temp =</span> <span class="st">"degrees C"</span>,
+  <span class="dt">par      =</span> <span class="st">"micromoles m-1 s-1"</span>
+)
+
+## Write these into the data.frame format
+factors &lt;-<span class="st"> </span><span class="kw">rbind</span>(
+<span class="kw">data.frame</span>(
+  <span class="dt">attributeName =</span> <span class="st">"i.flag"</span>,
+  <span class="dt">code =</span> <span class="kw">names</span>(i.flag),
+  <span class="dt">definition =</span> <span class="kw">unname</span>(i.flag)
+),
+<span class="kw">data.frame</span>(
+  <span class="dt">attributeName =</span> <span class="st">"variable"</span>,
+  <span class="dt">code =</span> <span class="kw">names</span>(variable),
+  <span class="dt">definition =</span> <span class="kw">unname</span>(variable)
+),
+<span class="kw">data.frame</span>(
+  <span class="dt">attributeName =</span> <span class="st">"value.i"</span>,
+  <span class="dt">code =</span> <span class="kw">names</span>(value.i),
+  <span class="dt">definition =</span> <span class="kw">unname</span>(value.i)
+)
+)</code></pre></div>
+<p>With these two data frames in place, we are ready to create our <code>attributeList</code> element:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">attributeList &lt;-<span class="st"> </span><span class="kw">set_attributes</span>(attributes, factors, <span class="dt">col_classes =</span> <span class="kw">c</span>(<span class="st">"character"</span>, <span class="st">"Date"</span>, <span class="st">"Date"</span>, <span class="st">"Date"</span>, <span class="st">"factor"</span>, <span class="st">"factor"</span>, <span class="st">"factor"</span>))</code></pre></div>
+</div>
+<div id="data-file-format" class="section level2">
+<h2>Data file format</h2>
+<p>The documentation of a <code>dataTable</code> also requires a 
+description of the file format itself. From where can the data file be 
+downloaded? Is it in CSV format, or TSV (tab-separated), or some other 
+format? Are there header lines that should be skipped? This information 
+documents the physical file itself, and is provided using the <code>physical</code> child element to the <code>dataTable</code>. To assist in documenting common file types such as CSV files, the <code>EML</code> R package provides the function <code>set_physical</code>, which takes as arguments many of these common options. By default these options are already set to document a standard <code>csv</code>
+ formatted object, so we do not need to specify delimiters and so forth 
+if our file conforms to that. We simply provide the name of the file, 
+which is used as the <code>objectName</code>. (See examples for <code>set_physical()</code> for reading other common variations, analogous to the options covered in R’s <code>read.table()</code> function.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">physical &lt;-<span class="st"> </span><span class="kw">set_physical</span>(<span class="st">"hf205-01-TPexp1.csv"</span>)</code></pre></div>
+</div>
+<div id="assembling-the-datatable" class="section level2">
+<h2>Assembling the <code>dataTable</code></h2>
+<p>Once we have defined the <code>attributeList</code> and <code>physical</code> file, we can now assemble the <code>dataTable</code> element itself. Unlike the <code>physical</code> and <code>attributeList</code> elements, there is no dedicated <code>set_</code> function for the <code>dataTable</code> element. <code>set_</code>
+ functions are only provided for those elements that are both commonly 
+used and have complex, nested structures in EML. In contrast, once the <code>attributeList</code> and <code>physical</code> elements have been defined, a <code>dataTable</code> element is really quite simple. Thus, we will use the default initialize method for the object, <code>new("dataTable", ...)</code> rather than a dedicated function, like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dataTable &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"dataTable"</span>,
+                 <span class="dt">entityName =</span> <span class="st">"hf205-01-TPexp1.csv"</span>,
+                 <span class="dt">entityDescription =</span> <span class="st">"tipping point experiment 1"</span>,
+                 <span class="dt">physical =</span> physical,
+                 <span class="dt">attributeList =</span> attributeList)</code></pre></div>
+</div>
+<div id="sidebar-understanding-the-new-method" class="section level2">
+<h2>Sidebar: Understanding the <code>new()</code> method</h2>
+<p>All elements in EML have associated <code>new()</code> initialize methods. We could have constructed the <code>attributeList</code> or <code>physical</code> in the same way, but their nested structure would mean a lot of <code>new()</code> calls inside other <code>new()</code> calls (just take a look at the <code>set_physical</code> function for an example).</p>
+<p>The <code>new()</code> methods are standard part of S4 objects in R, (though the EML package defines custom <code>initialize()</code> methods that make the <code>new()</code> methods more powerful). The <code>new()</code> method always takes as as the first argument the name of the object to be created, e.g. <code>new("dataTable")</code>. If we include nothing else, we get an empty <code>dataTable</code> element. We may also specify values for any of the “slots” in the <code>dataTable</code>. You can see a list of all possible slots of a given class using the (standard R function) <code>getSlots()</code>, giving the name of the object class, e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getSlots</span>(<span class="st">"dataTable"</span>)</code></pre></div>
+<pre><code>##                       .Data              schemaLocation 
+##                 "character"             "xml_attribute" 
+##                        lang                  slot_order 
+##             "xml_attribute"                 "character" 
+##         alternateIdentifier                  entityName 
+## "ListOfalternateIdentifier"                 "character" 
+##           entityDescription                    physical 
+##                 "character"            "ListOfphysical" 
+##                    coverage                     methods 
+##                  "Coverage"               "MethodsType" 
+##              additionalInfo               attributeList 
+##      "ListOfadditionalInfo"         "AttributeListType" 
+##                  constraint               caseSensitive 
+##          "ListOfconstraint"             "caseSensitive" 
+##             numberOfRecords                  references 
+##                 "character"                "references" 
+##                          id                      system 
+##             "xml_attribute"             "xml_attribute" 
+##                       scope 
+##             "xml_attribute"</code></pre>
+<p>Each slot has not only a name but a class of object it expects to 
+get. If we provide an object of a different class, the method will 
+automatically attempt to coerce it to the appropriate type. For 
+instance, we provide an object of class <code>physical</code> even though a <code>dataTable</code> expects the <code>physical</code> slot to be of class <code>ListOfphysical</code>, indicating that we could have multiple <code>physical</code> elements (e.g.&nbsp;when a single dataTable is split over multiple external files). The <code>new()</code> method automatically coerces the single <code>physical</code> class object for us. This makes the <code>new()</code> methods somewhat more convenient than creating a node first and then modifying the slots with the <code>@</code> subsetting; e.g.:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">example &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"dataTable"</span>)
+<span class="co">#example@physical &lt;- physical # Error -- wrong type.</span>
+example@physical &lt;-<span class="st"> </span><span class="kw">c</span>(physical) <span class="co"># concat method promotes 1 or more arguments to a ListOf </span></code></pre></div>
+</div>
+<div id="coverage-metadata" class="section level2">
+<h2>Coverage metadata</h2>
+<p>One of the most common and useful types of metadata is coverage 
+information, specifying the temporal, taxonomic, and geographic coverage
+ of the data. This kind of metadata is frequently indexed by data 
+repositories, allowing users to search for all data about a specific 
+region, time, or species. In EML, these descriptions can take many 
+forms, allowing for detailed descriptions as well as more general terms 
+when such precision is not possible (such as geological epoch instead of
+ date range, or higher taxonomic rank information in place of species 
+definitions.) Coverage elements that take full advantage of this 
+flexibility and precision should use the <code>new()</code> constructor 
+functions for each element, as we will illustrate later. Meanwhile, most
+ common specifications can be made using the more convenient but less 
+flexible <code>set_coverage()</code> function in EML. This function 
+takes a date range or list of specific dates, a list of scientific 
+names, a geographic description and bounding boxes, as shown here:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geographicDescription &lt;-<span class="st"> "The Geographic region of the kelp bed data extends along the California coast, down through the coast of Baja, Mexico: Central California (Halfmoon Bay to Purisima Point), Southern California (Point Arguello to the United States/Mexico border including the Channel Islands) and Baja California (points south of the United States/Mexico border including several offshore islands)"</span>
+
+
+coverage &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">set_coverage</span>(<span class="dt">begin =</span> <span class="st">'2012-06-01'</span>, <span class="dt">end =</span> <span class="st">'2013-12-31'</span>,
+               <span class="dt">sci_names =</span> <span class="st">"Sarracenia purpurea"</span>,
+               <span class="dt">geographicDescription =</span> geographicDescription,
+               <span class="dt">west =</span> -<span class="fl">122.44</span>, <span class="dt">east =</span> -<span class="fl">117.15</span>, 
+               <span class="dt">north =</span> <span class="fl">37.38</span>, <span class="dt">south =</span> <span class="fl">30.00</span>,
+               <span class="dt">altitudeMin =</span> <span class="dv">160</span>, <span class="dt">altitudeMaximum =</span> <span class="dv">330</span>,
+               <span class="dt">altitudeUnits =</span> <span class="st">"meter"</span>)</code></pre></div>
+<p>Note that R’s fuzzy matching permits shorter arguments like <code>west</code> instead of the full argument name, <code>westBoundingCoordinate</code>, in the above example. This results in the following <code>coverage</code> element:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coverage</code></pre></div>
+<pre><code>## &lt;coverage&gt;
+##   &lt;geographicCoverage&gt;
+##     &lt;geographicDescription&gt;The Geographic region of the kelp bed data extends along the California coast, down through the coast of Baja, Mexico: Central California (Halfmoon Bay to Purisima Point), Southern California (Point Arguello to the United States/Mexico border including the Channel Islands) and Baja California (points south of the United States/Mexico border including several offshore islands)&lt;/geographicDescription&gt;
+##     &lt;boundingCoordinates&gt;
+##       &lt;westBoundingCoordinate&gt;-122.44&lt;/westBoundingCoordinate&gt;
+##       &lt;eastBoundingCoordinate&gt;-117.15&lt;/eastBoundingCoordinate&gt;
+##       &lt;northBoundingCoordinate&gt;37.38&lt;/northBoundingCoordinate&gt;
+##       &lt;southBoundingCoordinate&gt;30&lt;/southBoundingCoordinate&gt;
+##       &lt;boundingAltitudes&gt;
+##         &lt;altitudeMinimum&gt;160&lt;/altitudeMinimum&gt;
+##         &lt;altitudeMaximum&gt;330&lt;/altitudeMaximum&gt;
+##         &lt;altitudeUnits&gt;meter&lt;/altitudeUnits&gt;
+##       &lt;/boundingAltitudes&gt;
+##     &lt;/boundingCoordinates&gt;
+##   &lt;/geographicCoverage&gt;
+##   &lt;temporalCoverage&gt;
+##     &lt;rangeOfDates&gt;
+##       &lt;beginDate&gt;
+##         &lt;calendarDate&gt;2012-06-01&lt;/calendarDate&gt;
+##       &lt;/beginDate&gt;
+##       &lt;endDate&gt;
+##         &lt;calendarDate&gt;2013-12-31&lt;/calendarDate&gt;
+##       &lt;/endDate&gt;
+##     &lt;/rangeOfDates&gt;
+##   &lt;/temporalCoverage&gt;
+##   &lt;taxonomicCoverage&gt;
+##     &lt;taxonomicClassification&gt;
+##       &lt;taxonRankName&gt;genus&lt;/taxonRankName&gt;
+##       &lt;taxonRankValue&gt;Sarracenia&lt;/taxonRankValue&gt;
+##       &lt;taxonomicClassification&gt;
+##         &lt;taxonRankName&gt;species&lt;/taxonRankName&gt;
+##         &lt;taxonRankValue&gt;purpurea&lt;/taxonRankValue&gt;
+##       &lt;/taxonomicClassification&gt;
+##     &lt;/taxonomicClassification&gt;
+##   &lt;/taxonomicCoverage&gt;
+## &lt;/coverage&gt;</code></pre>
+</div>
+<div id="creating-methods" class="section level2">
+<h2>Creating methods</h2>
+<p>Careful documentation of the methods involved in the experimental 
+design, measurement and collection of data are a key part of metadata. 
+Though frequently documented in scientific papers, such method sections 
+may be too brief or incomplete, and may become more readily disconnected
+ from the data file itself. Such documentation is usually written using 
+word-processing software such as MS Word, LaTeX or markdown. Users with <code>pandoc</code> installed (which ships as part of RStudio) can install the <code>rmarkdown</code>
+ package to take advantage of its automatic conversion into the DocBook 
+XML format used by EML. Here we open a MS Word file with the methods and
+ read this into our methods element using the helper function <code>set_methods()</code>. While not used in this example, note that the <code>set_methods()</code> function also includes many optional arguments for documenting additional information about sampling, or relevant citations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">methods_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"examples/hf205-methods.docx"</span>, <span class="dt">package =</span> <span class="st">"EML"</span>)
+methods &lt;-<span class="st"> </span><span class="kw">set_methods</span>(methods_file)</code></pre></div>
+</div>
+<div id="creating-parties" class="section level2">
+<h2>Creating parties</h2>
+<p>Individuals and organizations appear in many capacities in an EML document. Meanwhile, R already has a native object class, <code>person</code>
+ for describing individuals, which it uses in citations and package 
+descriptions, among other things. We can use native R function <code>person()</code> to create an R <code>person</code> object. Often it is more convenient to use R’s coercion function, <code>as.person()</code>, to turn a string with standardized notation into a <code>person</code> class (Though this is not always reliable, for instance, in surnames containing whitespace). However it is constructed, a <code>person</code> class can then be coerced into the appropriate EML object like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R_person &lt;-<span class="st"> </span><span class="kw">as.person</span>(<span class="st">"Aaron Ellison &lt;fakeaddress@email.com&gt;"</span>)
+aaron &lt;-<span class="kw">as</span>(R_person, <span class="st">"creator"</span>)</code></pre></div>
+<p>Likewise this method can be applied to a list of <code>person</code> objects:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">others &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">as.person</span>(<span class="st">"Benjamin Baiser [ctb]"</span>), <span class="kw">as.person</span>(<span class="st">"Jennifer Sirota [ctb]"</span>))
+associatedParty &lt;-<span class="st"> </span><span class="kw">as</span>(others, <span class="st">"associatedParty"</span>)</code></pre></div>
+<p>Note that R only permits certain codes such as <code>ctb</code> be be given in square brackets or as the <code>role</code> slot in a <code>person</code> object.</p>
+<p>We can instead always use the default constructor method (<code>new()</code>)
+ to create any of these elements, instead of the shorthand coercion 
+methods shown above. This permits a bit more flexibility, particularly 
+for constructing elements where we want to include more metadata than 
+R’s <code>person</code> object knows about. Here we define an <code>address</code> element first, since we can then re-use that element in defining both the contact person and publisher of the dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HF_address &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"address"</span>,
+                  <span class="dt">deliveryPoint =</span> <span class="st">"324 North Main Street"</span>,
+                  <span class="dt">city =</span> <span class="st">"Petersham"</span>,
+                  <span class="dt">administrativeArea =</span> <span class="st">"MA"</span>,
+                  <span class="dt">postalCode =</span> <span class="st">"01366"</span>,
+                  <span class="dt">country =</span> <span class="st">"USA"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">publisher &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"publisher"</span>,
+                 <span class="dt">organizationName =</span> <span class="st">"Harvard Forest"</span>,
+                 <span class="dt">address =</span> HF_address)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contact &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">new</span>(<span class="st">"contact"</span>,
+    <span class="dt">individualName =</span> aaron@individualName,
+    <span class="dt">electronicMail =</span> aaron@electronicMailAddress,
+    <span class="dt">address =</span> HF_address,
+    <span class="dt">organizationName =</span> <span class="st">"Harvard Forest"</span>,
+    <span class="dt">phone =</span> <span class="st">"000-000-0000"</span>)</code></pre></div>
+</div>
+<div id="creating-a-keywordset" class="section level2">
+<h2>Creating a <code>keywordSet</code></h2>
+<p>Constructing the <code>keywordSet</code> for EML illustrates the use of the <code>new()</code>
+ constructor methods and how they can be combined with basic R types 
+such as character vectors, maximizing both flexibility and reuse of 
+standard lists.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keywordSet &lt;-
+<span class="st">  </span><span class="kw">c</span>(<span class="kw">new</span>(<span class="st">"keywordSet"</span>,
+        <span class="dt">keywordThesaurus =</span> <span class="st">"LTER controlled vocabulary"</span>,
+        <span class="dt">keyword =</span> <span class="kw">c</span>(<span class="st">"bacteria"</span>,
+                    <span class="st">"carnivorous plants"</span>,
+                    <span class="st">"genetics"</span>,
+                    <span class="st">"thresholds"</span>)),
+    <span class="kw">new</span>(<span class="st">"keywordSet"</span>,
+        <span class="dt">keywordThesaurus =</span> <span class="st">"LTER core area"</span>,
+        <span class="dt">keyword =</span>  <span class="kw">c</span>(<span class="st">"populations"</span>, <span class="st">"inorganic nutrients"</span>, <span class="st">"disturbance"</span>)),
+    <span class="kw">new</span>(<span class="st">"keywordSet"</span>,
+        <span class="dt">keywordThesaurus =</span> <span class="st">"HFR default"</span>,
+        <span class="dt">keyword =</span> <span class="kw">c</span>(<span class="st">"Harvard Forest"</span>, <span class="st">"HFR"</span>, <span class="st">"LTER"</span>, <span class="st">"USA"</span>)))</code></pre></div>
+<p>Lastly, some of the elements needed for <code>eml</code> object can simply be given as text strings.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pubDate &lt;-<span class="st"> "2012"</span> 
+
+title &lt;-<span class="st"> "Thresholds and Tipping Points in a Sarracenia </span>
+<span class="st">Microecosystem at Harvard Forest since 2012"</span>
+
+abstract &lt;-<span class="st"> "The primary goal of this project is to determine</span>
+<span class="st">  experimentally the amount of lead time required to prevent a state</span>
+<span class="st">change. To achieve this goal, we will (1) experimentally induce state</span>
+<span class="st">changes in a natural aquatic ecosystem - the Sarracenia microecosystem;</span>
+<span class="st">(2) use proteomic analysis to identify potential indicators of states</span>
+<span class="st">and state changes; and (3) test whether we can forestall state changes</span>
+<span class="st">by experimentally intervening in the system. This work uses state-of-the</span>
+<span class="st">art molecular tools to identify early warning indicators in the field</span>
+<span class="st">of aerobic to anaerobic state changes driven by nutrient enrichment</span>
+<span class="st">in an aquatic ecosystem. The study tests two general hypotheses: (1)</span>
+<span class="st">proteomic biomarkers can function as reliable indicators of impending</span>
+<span class="st">state changes and may give early warning before increasing variances</span>
+<span class="st">and statistical flickering of monitored variables; and (2) well-timed</span>
+<span class="st">intervention based on proteomic biomarkers can avert future state changes</span>
+<span class="st">in ecological systems."</span>  
+
+intellectualRights &lt;-<span class="st"> "This dataset is released to the public and may be freely</span>
+<span class="st">  downloaded. Please keep the designated Contact person informed of any</span>
+<span class="st">plans to use the dataset. Consultation or collaboration with the original</span>
+<span class="st">investigators is strongly encouraged. Publications and data products</span>
+<span class="st">that make use of the dataset must include proper acknowledgement. For</span>
+<span class="st">more information on LTER Network data access and use policies, please</span>
+<span class="st">see: http://www.lternet.edu/data/netpolicy.html."</span></code></pre></div>
+<p>Many of these text fields can instead be read in from an external file that has richer formatting, such as we did with the <code>set_methods()</code> step. Any text field containing a slot named <code>section</code> can import text data from a MS Word <code>.docx</code> file, markdown file, or other file format recognized by <a href="http://pandoc.org/">Pandoc</a> into that element. For instance, here we import the same paragraph of text shown above for <code>abstract</code> from an external file (this time, a markdown-formatted file) instead:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">abstract_file &lt;-<span class="st">  </span><span class="kw">system.file</span>(<span class="st">"examples/hf205-abstract.md"</span>, <span class="dt">package =</span> <span class="st">"EML"</span>)
+abstract &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"abstract"</span>, <span class="dt">section =</span> <span class="kw">set_section</span>(abstract_file))</code></pre></div>
+<p>We are now ready to add each of these elements we have created so far into our <code>dataset</code> element, like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dataset &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"dataset"</span>,
+               <span class="dt">title =</span> title,
+               <span class="dt">creator =</span> aaron,
+               <span class="dt">pubDate =</span> pubDate,
+               <span class="dt">intellectualRights =</span> intellectualRights,
+               <span class="dt">abstract =</span> abstract,
+               <span class="dt">associatedParty =</span> associatedParty,
+               <span class="dt">keywordSet =</span> keywordSet,
+               <span class="dt">coverage =</span> coverage,
+               <span class="dt">contact =</span> contact,
+               <span class="dt">methods =</span> methods,
+               <span class="dt">dataTable =</span> dataTable)</code></pre></div>
+<p>With the <code>dataset</code> in place, we are ready to declare our root <code>eml</code> element. In addition to our <code>dataset</code>
+ element we have already built, all we need is a packageId code and the 
+system on which it is based. Here we have generated a unique id using 
+the standard <code>uuid</code> algorithm, which is available in the R package <code>uuid</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eml &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">"eml"</span>,
+           <span class="dt">packageId =</span> <span class="st">"f0cda3bf-2619-425e-b8be-8deb6bc6094d"</span>,  <span class="co"># from uuid::UUIDgenerate(),</span>
+           <span class="dt">system =</span> <span class="st">"uuid"</span>, <span class="co"># type of identifier</span>
+           <span class="dt">dataset =</span> dataset)</code></pre></div>
+<p>With our <code>eml</code> object fully constructed in R, we can now 
+check that it is valid, conforming to all criteria set forth in the EML 
+Schema. This will ensure that other researchers and other software can 
+readily parse and understand the contents of our metadata file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eml_validate</span>(eml)</code></pre></div>
+<pre><code>## $status
+## [1] 0
+## 
+## $errors
+## list()
+## attr(,"class")
+## [1] "XMLStructuredErrorList"
+## 
+## attr(,"class")
+## [1] "XMLSchemaValidationResults"</code></pre>
+<p>The validator returns a status <code>0</code> to indicate success. 
+Otherwise, the first error message encountered will be displayed. The 
+most common reason for an error is probably the omission of a required 
+metadata field.</p>
+<p>We can also write this <code>eml</code> metadata out as an XML file that can be published alongside our data files:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write_eml</span>(eml, <span class="st">"example.xml"</span>)</code></pre></div>
+<p>To take the greatest advantage of EML, we should consider depositing our file in a <a href="https://knb.ecoinformatics.org/knb/docs/intro.html">Metacat</a>-enabled repository, which we discuss in the next vignette on Publishing EML.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+
+</body></html>
