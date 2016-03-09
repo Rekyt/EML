@@ -111,8 +111,9 @@ S4Toeml <- function(obj,
   } else {
     node_name <- class(obj)[1]
   }
-  ## clear namespace
-  node_name <- gsub("^[a-z]*:", "", node_name)
+  ## clear namespace. except for stmml
+  if(!grepl("^stmml:", node_name))
+    node_name <- gsub("^[a-z]*:", "", node_name)
 
   if(length(ns) > 0)
     node_name <- paste0("eml:", node_name)

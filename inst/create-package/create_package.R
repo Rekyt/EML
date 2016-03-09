@@ -42,8 +42,13 @@ xs_base_classes(classes_file)
 
 
 ## This call to create_classes needs to pass a custom namespace
-stmml_ns <- xml_ns_rename( xml_ns(read_xml("inst/xsd/stmml.xsd")), xsd = "xs")
-create_classes("inst/xsd/stmml.xsd", classes_file, methods_file, ns = stmml_ns)
+
+## stmml manually modified/curated now
+#stmml_ns <- xml_ns_rename( xml_ns(read_xml("inst/xsd/stmml.xsd")), xsd = "xs")
+#create_classes("inst/xsd/stmml.xsd", classes_file, methods_file, ns = stmml_ns)
+
+
+
 
 ## Collate list -- avoid errors by manually setting the order of XSD file parsing
 collate <- c(
